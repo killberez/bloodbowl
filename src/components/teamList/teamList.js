@@ -169,7 +169,7 @@ function TeamList(props) {
           return player.skillsTraits.map((skill) => {
             console.log(skill);
             return (
-              <div>
+              <div className="skills">
                 {skill}: {specialRules[skill]}
               </div>
             );

@@ -63,3 +63,7 @@ tbody td {
   border: "solid 2px DodgerBlue";
   border-right: solid 2px dodgerblue;
 }
+
+.skills {
+  margin-top: 50px;
+}
