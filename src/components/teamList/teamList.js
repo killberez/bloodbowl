@@ -42,8 +42,19 @@ function TeamList(props) {
   const columns = React.useMemo(
     () => [
       {
-        Header: "",
-        accessor: "col1",
+        Header: "N",
+        accessor: (props) => (
+          <input
+            style={{
+              color: "white",
+              width: "100%",
+              height: "100%",
+              background: "transparent",
+              border: "none",
+              outline: "none",
+            }}
+          ></input>
+        ),
       },
       {
         Header: "Name",
@@ -94,23 +105,78 @@ function TeamList(props) {
       },
       {
         Header: "Unspent SPP",
-        accessor: "col11",
+        accessor: (props) => (
+          <input
+            style={{
+              color: "white",
+              width: "100%",
+              height: "100%",
+              background: "transparent",
+              border: "none",
+              outline: "none",
+            }}
+          ></input>
+        ),
       },
       {
         Header: "MNG",
-        accessor: "col12",
+        accessor: (props) => (
+          <input
+            style={{
+              color: "white",
+              width: "100%",
+              height: "100%",
+              background: "transparent",
+              border: "none",
+              outline: "none",
+            }}
+          ></input>
+        ),
       },
       {
         Header: "NI",
-        accessor: "col13",
+        accessor: (props) => (
+          <input
+            style={{
+              color: "white",
+              width: "100%",
+              height: "100%",
+              background: "transparent",
+              border: "none",
+              outline: "none",
+            }}
+          ></input>
+        ),
       },
       {
         Header: "TR",
-        accessor: "col14",
+        accessor: (props) => (
+          <input
+            style={{
+              color: "white",
+              width: "100%",
+              height: "100%",
+              background: "transparent",
+              border: "none",
+              outline: "none",
+            }}
+          ></input>
+        ),
       },
       {
         Header: "Current value",
-        accessor: "col15",
+        accessor: (props) => (
+          <input
+            style={{
+              color: "white",
+              width: "100%",
+              height: "100%",
+              background: "transparent",
+              border: "none",
+              outline: "none",
+            }}
+          ></input>
+        ),
       },
     ],
     []
