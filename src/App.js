@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import TeamList from "./components/teamList/teamList.js";
+import TeamChoise from "./components/teamChoise/teamChoise.js";
+import MainPaige from "./components/mainPaige/mainPaige.js";
+import TeamCreator from "./components/teamCreator/teamCreator.js";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Switch>
+          <Route exact path="/">
+            <MainPaige />
+          </Route>
+          <Route exact path="/teamchoise">
+            <TeamChoise />
+          </Route>
+          <Route exact path="/teamcreator/:team">
+            <TeamCreator />
+          </Route>
+          <Route exact path="/teamlist">
+            <TeamList />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

@@ -1,0 +1,65 @@
+table {
+  width: 85%;
+  opacity: 0.8;
+  color: white;
+  border-collapse: collapse;
+  margin: 100px;
+  padding: 40px;
+  text-align: left;
+}
+
+input {
+  width: 30px;
+  height: 10px;
+}
+
+thead {
+  background-color: dodgerblue;
+}
+thead th:nth-child(1) {
+  width: 30px;
+}
+
+thead th:nth-child(4),
+th:nth-child(5),
+th:nth-child(6),
+th:nth-child(7),
+th:nth-child(8) {
+  width: 30px;
+}
+
+thead th:nth-child(9) {
+  width: 500px;
+}
+
+thead th:nth-child(10) {
+  width: 100px;
+}
+
+thead th:nth-child(11) {
+  width: 100px;
+}
+
+thead th:nth-child(12),
+thead th:nth-child(13),
+thead th:nth-child(14) {
+  width: 40px;
+}
+
+thead th:nth-child(15) {
+  width: 100px;
+}
+
+tbody tr {
+  background-color: LightSkyBlue;
+}
+
+tbody tr:nth-child(even) {
+  color: white;
+  background-color: rgb(102, 174, 245);
+}
+
+tbody td {
+  border: "solid 2px DodgerBlue";
+  border-right: solid 2px dodgerblue;
+}
