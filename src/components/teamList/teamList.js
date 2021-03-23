@@ -47,7 +47,18 @@ function TeamList(props) {
       },
       {
         Header: "Name",
-        accessor: "col2",
+        accessor: (props) => (
+          <input
+            style={{
+              color: "white",
+              width: "100%",
+              height: "100%",
+              background: "transparent",
+              border: "none",
+              outline: "none",
+            }}
+          ></input>
+        ),
       },
       {
         Header: "Position",
@@ -169,9 +180,10 @@ function TeamList(props) {
           return player.skillsTraits.map((skill) => {
             console.log(skill);
             return (
-              <div className="skills">
-                {skill}: {specialRules[skill]}
-              </div>
+              <div
+                className="skills"
+                dangerouslySetInnerHTML={{ __html: specialRules[skill] }}
+              ></div>
             );
           });
         })}
