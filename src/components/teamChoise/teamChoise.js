@@ -36,15 +36,7 @@ function TeamChoise() {
         <Link to="/">Back</Link>
       </button>
       <button>
-        <Link
-          to={"/teamcreator/" + team}
-          //   to={{
-          //     pathname: "/teamcreator",
-          //     state: { team },
-          //   }}
-        >
-          Next
-        </Link>
+        <Link to={"/teamcreator/" + team}>Next</Link>
       </button>
       {/* <TeamCreator data={team} /> */}
     </div>

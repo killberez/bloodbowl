@@ -8,10 +8,12 @@ import { teams } from "../../data.js";
 
 function TeamList(props) {
   const location = useLocation();
+  const teamName = location.state.teamName;
   const playerNames = location.state.newPlayers;
   const teamData = location.state.newTeamData || [];
+  const teamEnducements = location.state.teamEnducements;
   const uniq = [...new Set(teamData)];
-  console.log(uniq);
+  console.log(teamEnducements.reRolls);
   const data = React.useMemo(
     () => [
       ...teamData,
@@ -107,6 +109,10 @@ function TeamList(props) {
         Header: "Unspent SPP",
         accessor: (props) => (
           <input
+            name="spp"
+            onChange={(event) => {
+              console.log(event.target.name, "-", event.target.value);
+            }}
             style={{
               color: "white",
               width: "100%",
@@ -192,6 +198,7 @@ function TeamList(props) {
 
   return (
     <div>
+      {teamName}
       <table
         {...getTableProps()}
         //   style={{ width: "100%", borderCollapse: "collapse", opacity: 0.7 }}
@@ -241,10 +248,10 @@ function TeamList(props) {
           })}
         </tbody>
       </table>
+      <div>Re-rolls:{teamEnducements.reRolls}</div>
       <div>
         {uniq.map((player) => {
           return player.skillsTraits.map((skill) => {
-            console.log(skill);
             return (
               <div
                 className="skills"
