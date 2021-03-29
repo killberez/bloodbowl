@@ -8,8 +8,40 @@ import {
   useParams,
 } from "react-router-dom";
 import { teams } from "../../data.js";
+import create from "zustand";
+
+export const useStore = create((set) => ({
+  teamPlayers: [],
+  addPlr: (player) =>
+    set((state) => ({
+      ...state,
+      teamPlayers: state.teamPlayers.concat({ ...player }),
+    })),
+  removePlr: (index) => {
+    set((state) => {
+      const teamPlayersCopy = [...state.teamPlayers];
+      teamPlayersCopy.splice(index, 1);
+      return {
+        ...state,
+        teamPlayers: teamPlayersCopy,
+      };
+    });
+  },
+  addSpp: (event, rowIndex) => {
+    set((state) => {
+      const teamPlayersCopy = [...state.teamPlayers];
+      teamPlayersCopy[rowIndex].spp = event;
+      return {
+        ...state,
+        teamPlayers: teamPlayersCopy,
+        // state.teamPlayers[rowIndex].spp + event,
+      };
+    });
+  },
+}));
 
 function TeamCreator(props) {
+  const { teamPlayers, addPlr, removePlr } = useStore((state) => state);
   const params = useParams();
   const team = params.team;
   const [newPlayers, setNewPlayer] = useState([]);
@@ -38,15 +70,64 @@ function TeamCreator(props) {
       {teams[team].players.map((player) => {
         return (
           <div>
+            <div>{player.position}</div>
+            <button
+              disabled={
+                teamPlayersQty[player.position] <= 0 ||
+                teamPlayersQty[player.position] === undefined
+              }
+              onClick={() => {
+                setTeamPlayersQty({
+                  ...teamPlayersQty,
+                  [player.position]: teamPlayersQty[player.position] - 1,
+                });
+                const index = teamPlayers.indexOf(player);
+                removePlr(index);
+                console.log(teamPlayers);
+                // const playerIndex = newPlayers.indexOf(player);
+                // newTeamData.splice(playerIndex, 1);
+                // newPlayers.splice(playerIndex, 1);
+                setTotalPrice(totalPrice - player.cost);
+              }}
+            >
+              -
+            </button>
+            <button
+              disabled={teamPlayersQty[player.position] >= player.qty}
+              onClick={() => {
+                addPlr(player);
+                console.log(teamPlayers);
+                setTeamPlayersQty({
+                  ...teamPlayersQty,
+                  [player.position]: teamPlayersQty[player.position]
+                    ? teamPlayersQty[player.position] + 1
+                    : 1,
+                });
+                setTotalPrice(totalPrice + player.cost);
+              }}
+            >
+              +
+            </button>
+            {teamPlayersQty[player.position]}/{player.qty}
+          </div>
+        );
+      })}
+      {/* {teams[team].players.map((player) => {
+        return (
+          <div>
             {player.position}
             <button
-              disabled={teamPlayersQty[player.position] <= 0}
+              disabled={
+                teamPlayersQty[player.position] <= 0 ||
+                teamPlayersQty[player.position] === undefined
+              }
               onClick={() => {
                 setTeamPlayersQty({
                   ...teamPlayersQty,
                   [player.position]: teamPlayersQty[player.position] - 1,
                 });
                 const playerIndex = newPlayers.indexOf(player);
+                newTeamData.splice(playerIndex, 1);
                 newPlayers.splice(playerIndex, 1);
                 setTotalPrice(totalPrice - player.cost);
               }}
@@ -63,22 +144,22 @@ function TeamCreator(props) {
                     : 1,
                 });
                 setNewPlayer(newPlayers.concat(player.position));
-                setNewTeamData(newTeamData.concat(player));
+                setNewTeamData(newTeamData.concat({ ...player }));
                 setTotalPrice(totalPrice + player.cost);
+                console.log(newTeamData);
                 // setNewTeamData((state) => {
                 //   const stateCopy = [...state];
                 //   stateCopy[id] = player;
                 //   return stateCopy;
                 // });
-                // console.log(newPlayers);
               }}
             >
               +
             </button>
-            {teamPlayersQty[player.position]}
+            {teamPlayersQty[player.position]}/{player.qty}
           </div>
         );
-      })}
+      })} */}
       <div>
         {newPlayers.map((player) => {
           return <div>{player}</div>;
@@ -247,11 +328,28 @@ function TeamCreator(props) {
           +
         </button>
       </div>
+      <button
+        onClick={() => {
+          setNewTeamData((state) => {
+            return state.map((player, i) => {
+              player.n = i;
+            });
+          });
+          console.log(newTeamData);
+        }}
+      >
+        Submit
+      </button>
       <button>
         <Link
           to={{
             pathname: "/teamlist",
-            state: { newPlayers, newTeamData, teamName, teamEnducements },
+            state: {
+              newPlayers,
+              newTeamData,
+              teamName,
+              teamEnducements,
+            },
           }}
         >
           Create team

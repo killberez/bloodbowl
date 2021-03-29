@@ -5,18 +5,20 @@ import { useTable } from "react-table";
 import { useLocation } from "react-router";
 import { specialRules } from "../../data.js";
 import { teams } from "../../data.js";
+import { useStore } from "../teamCreator/teamCreator";
 
 function TeamList(props) {
+  const { teamPlayers, addSpp } = useStore((state) => state);
   const location = useLocation();
   const teamName = location.state.teamName;
   const playerNames = location.state.newPlayers;
   const teamData = location.state.newTeamData || [];
   const teamEnducements = location.state.teamEnducements;
   const uniq = [...new Set(teamData)];
-  console.log(teamEnducements.reRolls);
+
   const data = React.useMemo(
     () => [
-      ...teamData,
+      ...teamPlayers,
       //   {
       //     col1: "1",
       //     col2: "Einstein",
@@ -38,7 +40,7 @@ function TeamList(props) {
       //   { col1: "15", col2: "", col3: teamData[14] },
       //   { col1: "16", col2: "", col3: teamData[15] },
     ],
-    [teamData]
+    [teamPlayers]
   );
 
   const columns = React.useMemo(
@@ -60,7 +62,7 @@ function TeamList(props) {
       },
       {
         Header: "Name",
-        accessor: (props) => (
+        accessor: (props, rowIndex) => (
           <input
             style={{
               color: "white",
@@ -107,10 +109,13 @@ function TeamList(props) {
       },
       {
         Header: "Unspent SPP",
-        accessor: (props) => (
+        accessor: (props, rowIndex) => (
           <input
+            value={props.spp}
             name="spp"
             onChange={(event) => {
+              addSpp(+event.target.value, rowIndex);
+              console.log();
               console.log(event.target.name, "-", event.target.value);
             }}
             style={{

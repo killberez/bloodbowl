@@ -2,6 +2,7 @@ export const teams = {
   blackOrcs: {
     players: [
       {
+        n: 0,
         position: "Goblin Bruiser Linemen",
         qty: 12,
         cost: 45000,
@@ -10,11 +11,16 @@ export const teams = {
         ag: 3,
         pa: 4,
         av: 8,
+        spp: 0,
+        ni: 0,
+        tr: 0,
+        currentValue: 0,
         skillsTraits: ["Dodge", "Right Stuff", "Stunty", "Thick Skull"],
         primary: "A",
         secondary: "GPS",
       },
       {
+        n: 0,
         position: "Black Ork",
         qty: 6,
         cost: 90000,
@@ -23,11 +29,16 @@ export const teams = {
         ag: 4,
         pa: 5,
         av: 10,
+        spp: 0,
+        ni: 0,
+        tr: 0,
+        currentValue: 0,
         skillsTraits: ["Brawler", "Grab"],
         primary: "GS",
         secondary: "AP",
       },
       {
+        n: 0,
         position: "Trained troll",
         qty: 1,
         cost: 115000,
@@ -36,6 +47,10 @@ export const teams = {
         ag: 5,
         pa: 5,
         av: 10,
+        spp: 0,
+        ni: 0,
+        tr: 0,
+        currentValue: 0,
         skillsTraits: [
           "Always Hungry",
           "Loner (+4)",
