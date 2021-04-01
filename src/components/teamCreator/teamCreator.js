@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,9 +9,27 @@ import {
 } from "react-router-dom";
 import { teams } from "../../data.js";
 import create from "zustand";
+import _ from "lodash";
 
 export const useStore = create((set) => ({
   teamPlayers: [],
+  teamName: 0,
+  teamQty: 0,
+  refreshName: (refState) =>
+    set((state) => ({
+      ...state,
+      teamName: refState,
+    })),
+  addTeamName: (event) =>
+    set((state) => ({
+      ...state.teamName,
+      teamName: event,
+    })),
+  refreshState: (reState) =>
+    set((state) => ({
+      ...state,
+      teamPlayers: reState,
+    })),
   addPlr: (player) =>
     set((state) => ({
       ...state,
@@ -27,6 +45,26 @@ export const useStore = create((set) => ({
       };
     });
   },
+  addNumber: (event, rowIndex) => {
+    set((state) => {
+      const teamPlayersCopy = [...state.teamPlayers];
+      teamPlayersCopy[rowIndex].number = event;
+      return {
+        ...state,
+        teamPlayers: teamPlayersCopy,
+      };
+    });
+  },
+  addName: (event, rowIndex) => {
+    set((state) => {
+      const teamPlaersCopy = [...state.teamPlayers];
+      teamPlaersCopy[rowIndex].name = event;
+      return {
+        ...state,
+        teamPlayers: teamPlaersCopy,
+      };
+    });
+  },
   addSpp: (event, rowIndex) => {
     set((state) => {
       const teamPlayersCopy = [...state.teamPlayers];
@@ -38,16 +76,37 @@ export const useStore = create((set) => ({
       };
     });
   },
+  addCurrentValue: (event, rowIndex) => {
+    set((state) => {
+      const teamPlaersCopy = [...state.teamPlayers];
+      teamPlaersCopy[rowIndex].currentValue = event;
+      return {
+        ...state,
+        teamPlayers: teamPlaersCopy,
+      };
+    });
+  },
 }));
 
 function TeamCreator(props) {
-  const { teamPlayers, addPlr, removePlr } = useStore((state) => state);
+  const {
+    teamName,
+    refAllState,
+    teamPlayers,
+    addPlr,
+    removePlr,
+    refreshState,
+    addTeamName,
+  } = useStore((state) => state);
+
+  const state = useStore();
+
   const params = useParams();
   const team = params.team;
   const [newPlayers, setNewPlayer] = useState([]);
   const [newTeamData, setNewTeamData] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [teamName, setTeamName] = useState("");
+  // const [teamName, setTeamName] = useState("");
   const [teamPlayersQty, setTeamPlayersQty] = useState({});
   const [teamEnducements, setTeamEnducements] = useState({
     reRolls: 0,
@@ -58,12 +117,30 @@ function TeamCreator(props) {
     teamWizzard: 0,
   });
 
+  // useEffect(() => {
+  //   const refState = window.localStorage.getItem("my-team-table");
+  //   if (
+  //     teamPlayers.length &&
+  //     (!refState || !_.isEqual(teamPlayers, JSON.parse(refState)))
+  //   ) {
+  //     window.localStorage.setItem("my-team-table", JSON.stringify(teamPlayers));
+  //   }
+  // }, [teamPlayers]);
+
+  // useEffect(() => {
+  //   const refState = window.localStorage.getItem("my-team-table");
+  //   if (!teamPlayers.length && refState) {
+  //     refreshState(JSON.parse(refState));
+  //   }
+  // }, [teamPlayers]);
+
   return (
     <div>
       Team name
       <input
         onChange={(event) => {
-          setTeamName(event.target.value);
+          addTeamName(event.target.value);
+          console.log(state.teamName);
         }}
         style={{ width: "200px" }}
       ></input>
@@ -347,7 +424,7 @@ function TeamCreator(props) {
             state: {
               newPlayers,
               newTeamData,
-              teamName,
+              // teamName,
               teamEnducements,
             },
           }}

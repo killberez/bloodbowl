@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRowSelect } from "react-table";
 import "./teamList.css";
 import { useTable } from "react-table";
@@ -6,15 +6,60 @@ import { useLocation } from "react-router";
 import { specialRules } from "../../data.js";
 import { teams } from "../../data.js";
 import { useStore } from "../teamCreator/teamCreator";
+import _ from "lodash";
 
 function TeamList(props) {
-  const { teamPlayers, addSpp } = useStore((state) => state);
+  const state = useStore();
+  const {
+    refreshName,
+    teamPlayers,
+    addSpp,
+    addName,
+    addCurrentValue,
+    addNumber,
+    refreshState,
+    teamName,
+  } = useStore((state) => state);
   const location = useLocation();
-  const teamName = location.state.teamName;
+  // const teamName = location.state.teamName;
   const playerNames = location.state.newPlayers;
   const teamData = location.state.newTeamData || [];
   const teamEnducements = location.state.teamEnducements;
   const uniq = [...new Set(teamData)];
+
+  useEffect(() => {
+    const refState = window.localStorage.getItem("team-name");
+    if (
+      teamName.length &&
+      (!refState || !_.isEqual(teamName, JSON.parse(refState)))
+    ) {
+      window.localStorage.setItem("team-name", JSON.stringify(teamName));
+    }
+  }, [teamName]);
+
+  useEffect(() => {
+    const refState = window.localStorage.getItem("team-name");
+    if (!teamName.length && refState) {
+      refreshName(JSON.parse(refState));
+    }
+  }, [teamName]);
+
+  useEffect(() => {
+    const refState = window.localStorage.getItem("my-team-table");
+    if (
+      teamPlayers.length &&
+      (!refState || !_.isEqual(teamPlayers, JSON.parse(refState)))
+    ) {
+      window.localStorage.setItem("my-team-table", JSON.stringify(teamPlayers));
+    }
+  }, [teamPlayers]);
+
+  useEffect(() => {
+    const refState = window.localStorage.getItem("my-team-table");
+    if (!teamPlayers.length && refState) {
+      refreshState(JSON.parse(refState));
+    }
+  }, [teamPlayers]);
 
   const data = React.useMemo(
     () => [
@@ -47,8 +92,13 @@ function TeamList(props) {
     () => [
       {
         Header: "N",
-        accessor: (props) => (
+        accessor: (props, rowIndex) => (
           <input
+            value={props.number}
+            name="number"
+            onChange={(event) => {
+              addNumber(event.target.value, rowIndex);
+            }}
             style={{
               color: "white",
               width: "100%",
@@ -64,6 +114,13 @@ function TeamList(props) {
         Header: "Name",
         accessor: (props, rowIndex) => (
           <input
+            value={props.name}
+            name="name"
+            onChange={(event) => {
+              addName(event.target.value, rowIndex);
+              console.log();
+              console.log(event.target.name, "-", event.target.value);
+            }}
             style={{
               color: "white",
               width: "100%",
@@ -176,8 +233,15 @@ function TeamList(props) {
       },
       {
         Header: "Current value",
-        accessor: (props) => (
+        accessor: (props, rowIndex) => (
           <input
+            value={props.currentValue}
+            name="currentValue"
+            onChange={(event) => {
+              addCurrentValue(+event.target.value, rowIndex);
+              console.log();
+              console.log(event.target.name, "-", event.target.value);
+            }}
             style={{
               color: "white",
               width: "100%",

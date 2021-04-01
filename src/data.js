@@ -2,7 +2,7 @@ export const teams = {
   blackOrcs: {
     players: [
       {
-        n: 0,
+        number: 0,
         position: "Goblin Bruiser Linemen",
         qty: 12,
         cost: 45000,
@@ -20,7 +20,7 @@ export const teams = {
         secondary: "GPS",
       },
       {
-        n: 0,
+        number: 0,
         position: "Black Ork",
         qty: 6,
         cost: 90000,
@@ -38,7 +38,7 @@ export const teams = {
         secondary: "AP",
       },
       {
-        n: 0,
+        number: 0,
         position: "Trained troll",
         qty: 1,
         cost: 115000,
@@ -75,6 +75,7 @@ export const teams = {
   humans: {
     players: [
       {
+        number: 0,
         position: "imperialRetainerLinemen",
         qty: 12,
         cost: 45000,
@@ -88,6 +89,7 @@ export const teams = {
         secondary: "AS",
       },
       {
+        number: 0,
         position: "imperialThrowers",
         qty: 2,
         cost: 75000,
@@ -101,6 +103,7 @@ export const teams = {
         secondary: "AS",
       },
       {
+        number: 0,
         position: "nobleBlitzers",
         qty: 2,
         cost: 105000,
@@ -114,6 +117,7 @@ export const teams = {
         secondary: "PS",
       },
       {
+        number: 0,
         position: "bodygards",
         qty: 4,
         cost: 90000,
@@ -127,6 +131,7 @@ export const teams = {
         secondary: "A",
       },
       {
+        number: 0,
         position: "ogre",
         qty: 1,
         cost: 145000,
