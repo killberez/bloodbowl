@@ -15,6 +15,18 @@ const options = [
     label: "Humans",
     value: "humans",
   },
+  {
+    label: "Necromantic Horror Teams",
+    value: "necromanticHorrorTeams",
+  },
+  {
+    label: "Chaos Chosen Teams",
+    value: "chaosChosenTeams",
+  },
+  {
+    label: "Ogre Teams",
+    value: "ogreTeams",
+  },
 ];
 
 function TeamChoise() {

@@ -6,7 +6,7 @@ import { useLocation } from "react-router";
 import { specialRules } from "../../data.js";
 import { teams } from "../../data.js";
 import { useStore } from "../teamCreator/teamCreator";
-import _ from "lodash";
+import _, { sortedUniqBy } from "lodash";
 
 function TeamList(props) {
   const state = useStore();
@@ -19,6 +19,8 @@ function TeamList(props) {
     addNumber,
     refreshState,
     teamName,
+    rerrols,
+    refreshRerrols,
   } = useStore((state) => state);
   const location = useLocation();
   // const teamName = location.state.teamName;
@@ -26,6 +28,42 @@ function TeamList(props) {
   const teamData = location.state.newTeamData || [];
   const teamEnducements = location.state.teamEnducements;
   const uniq = [...new Set(teamData)];
+
+  function AddSkills() {
+    const skills = [];
+    teamPlayers.map((player) => {
+      player.skillsTraits.map((skill) => {
+        skills.push(skill);
+      });
+    });
+    const uniqSkills = [...new Set(skills)];
+    console.log(uniqSkills);
+    return uniqSkills.map((skill) => {
+      return (
+        <div
+          className="skills"
+          dangerouslySetInnerHTML={{ __html: specialRules[skill] }}
+        ></div>
+      );
+    });
+  }
+
+  useEffect(() => {
+    const refState = window.localStorage.getItem("rerrols");
+    if (
+      rerrols.length &&
+      (!refState || !_.isEqual(rerrols, JSON.parse(refState)))
+    ) {
+      window.localStorage.setItem("rerrols", JSON.stringify(rerrols));
+    }
+  }, [rerrols]);
+
+  useEffect(() => {
+    const refState = window.localStorage.getItem("rerrols");
+    if (!rerrols.length && refState) {
+      refreshRerrols(JSON.parse(refState));
+    }
+  }, [rerrols]);
 
   useEffect(() => {
     const refState = window.localStorage.getItem("team-name");
@@ -98,6 +136,7 @@ function TeamList(props) {
             name="number"
             onChange={(event) => {
               addNumber(event.target.value, rowIndex);
+              console.log(state.teamPlayers);
             }}
             style={{
               color: "white",
@@ -317,18 +356,9 @@ function TeamList(props) {
           })}
         </tbody>
       </table>
-      <div>Re-rolls:{teamEnducements.reRolls}</div>
+      <div>Re-rolls:{rerrols}</div>
       <div>
-        {uniq.map((player) => {
-          return player.skillsTraits.map((skill) => {
-            return (
-              <div
-                className="skills"
-                dangerouslySetInnerHTML={{ __html: specialRules[skill] }}
-              ></div>
-            );
-          });
-        })}
+        <AddSkills />
       </div>
     </div>
   );

@@ -14,7 +14,12 @@ import _ from "lodash";
 export const useStore = create((set) => ({
   teamPlayers: [],
   teamName: 0,
-  teamQty: 0,
+  rerrols: 0,
+  refreshRerrols: (refState) =>
+    set((state) => ({
+      ...state,
+      rerrols: refState,
+    })),
   refreshName: (refState) =>
     set((state) => ({
       ...state,
@@ -97,6 +102,8 @@ function TeamCreator(props) {
     removePlr,
     refreshState,
     addTeamName,
+    addRerrol,
+    removeRerrol,
   } = useStore((state) => state);
 
   const state = useStore();
