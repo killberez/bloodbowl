@@ -440,6 +440,13 @@ function TeamCreator(props) {
         </Link>
       </button>
       <div>Total price: {totalPrice}</div>
+      <button
+        onClick={() => {
+          localStorage.clear();
+        }}
+      >
+        RESET
+      </button>
       <button>
         <Link to="/teamchoise">Go back</Link>
       </button>

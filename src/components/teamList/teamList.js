@@ -357,6 +357,13 @@ function TeamList(props) {
         </tbody>
       </table>
       <div>Re-rolls:{rerrols}</div>
+      <button
+        onClick={() => {
+          localStorage.clear();
+        }}
+      >
+        RESET
+      </button>
       <div>
         <AddSkills />
       </div>
