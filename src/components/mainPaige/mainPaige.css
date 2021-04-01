@@ -1,3 +1,13 @@
 .mainPaigeBody {
   position: relative;
 }
+
+.mainDiv {
+  text-size-adjust: 20;
+  display: block;
+  margin-top: 200px;
+  width: 560px;
+  height: 315px;
+  margin-left: auto;
+  margin-right: auto;
+}

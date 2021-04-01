@@ -10,6 +10,7 @@ import {
 import { teams } from "../../data.js";
 import create from "zustand";
 import _ from "lodash";
+import "./teamCreator.css";
 
 export const useStore = create((set) => ({
   teamPlayers: [],
@@ -142,7 +143,7 @@ function TeamCreator(props) {
   // }, [teamPlayers]);
 
   return (
-    <div>
+    <div className="mainDiv">
       Team name
       <input
         onChange={(event) => {

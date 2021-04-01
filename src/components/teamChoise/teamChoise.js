@@ -33,7 +33,7 @@ function TeamChoise() {
   const [team, setTeam] = useState("");
 
   return (
-    <div>
+    <div className="mainDiv">
       <select
         value={team}
         onChange={(event) => {
