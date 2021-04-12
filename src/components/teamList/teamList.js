@@ -37,7 +37,6 @@ function TeamList(props) {
       });
     });
     const uniqSkills = [...new Set(skills)];
-    console.log(uniqSkills);
     return uniqSkills.map((skill) => {
       return (
         <div
@@ -48,56 +47,56 @@ function TeamList(props) {
     });
   }
 
-  useEffect(() => {
-    const refState = window.localStorage.getItem("rerrols");
-    if (
-      rerrols.length &&
-      (!refState || !_.isEqual(rerrols, JSON.parse(refState)))
-    ) {
-      window.localStorage.setItem("rerrols", JSON.stringify(rerrols));
-    }
-  }, [rerrols]);
+  // useEffect(() => {
+  //   const refState = window.localStorage.getItem("rerrols");
+  //   if (
+  //     rerrols.length &&
+  //     (!refState || !_.isEqual(rerrols, JSON.parse(refState)))
+  //   ) {
+  //     window.localStorage.setItem("rerrols", JSON.stringify(rerrols));
+  //   }
+  // }, [rerrols]);
 
-  useEffect(() => {
-    const refState = window.localStorage.getItem("rerrols");
-    if (!rerrols.length && refState) {
-      refreshRerrols(JSON.parse(refState));
-    }
-  }, [rerrols]);
+  // useEffect(() => {
+  //   const refState = window.localStorage.getItem("rerrols");
+  //   if (!rerrols.length && refState) {
+  //     refreshRerrols(JSON.parse(refState));
+  //   }
+  // }, [rerrols]);
 
-  useEffect(() => {
-    const refState = window.localStorage.getItem("team-name");
-    if (
-      teamName.length &&
-      (!refState || !_.isEqual(teamName, JSON.parse(refState)))
-    ) {
-      window.localStorage.setItem("team-name", JSON.stringify(teamName));
-    }
-  }, [teamName]);
+  // useEffect(() => {
+  //   const refState = window.localStorage.getItem("team-name");
+  //   if (
+  //     teamName.length &&
+  //     (!refState || !_.isEqual(teamName, JSON.parse(refState)))
+  //   ) {
+  //     window.localStorage.setItem("team-name", JSON.stringify(teamName));
+  //   }
+  // }, [teamName]);
 
-  useEffect(() => {
-    const refState = window.localStorage.getItem("team-name");
-    if (!teamName.length && refState) {
-      refreshName(JSON.parse(refState));
-    }
-  }, [teamName]);
+  // useEffect(() => {
+  //   const refState = window.localStorage.getItem("team-name");
+  //   if (!teamName.length && refState) {
+  //     refreshName(JSON.parse(refState));
+  //   }
+  // }, [teamName]);
 
-  useEffect(() => {
-    const refState = window.localStorage.getItem("my-team-table");
-    if (
-      teamPlayers.length &&
-      (!refState || !_.isEqual(teamPlayers, JSON.parse(refState)))
-    ) {
-      window.localStorage.setItem("my-team-table", JSON.stringify(teamPlayers));
-    }
-  }, [teamPlayers]);
+  // useEffect(() => {
+  //   const refState = window.localStorage.getItem("my-team-table");
+  //   if (
+  //     teamPlayers.length &&
+  //     (!refState || !_.isEqual(teamPlayers, JSON.parse(refState)))
+  //   ) {
+  //     window.localStorage.setItem("my-team-table", JSON.stringify(teamPlayers));
+  //   }
+  // }, [teamPlayers]);
 
-  useEffect(() => {
-    const refState = window.localStorage.getItem("my-team-table");
-    if (!teamPlayers.length && refState) {
-      refreshState(JSON.parse(refState));
-    }
-  }, [teamPlayers]);
+  // useEffect(() => {
+  //   const refState = window.localStorage.getItem("my-team-table");
+  //   if (!teamPlayers.length && refState) {
+  //     refreshState(JSON.parse(refState));
+  //   }
+  // }, [teamPlayers]);
 
   const data = React.useMemo(
     () => [

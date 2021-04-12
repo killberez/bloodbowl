@@ -14,8 +14,16 @@ import "./teamCreator.css";
 
 export const useStore = create((set) => ({
   teamPlayers: [],
+  playersQty: {},
   teamName: 0,
   rerrols: 0,
+  teamEnducements: {
+    assistantCoaches: 0,
+    cheerleaders: 0,
+    apothecary: 0,
+    teamWizzard: 0,
+  },
+  totalPrice: 0,
   refreshRerrols: (refState) =>
     set((state) => ({
       ...state,
@@ -82,6 +90,18 @@ export const useStore = create((set) => ({
       };
     });
   },
+  addRerrol: () => {
+    set((state) => ({
+      ...state.rerolls,
+      rerrols: state.rerrols + 1,
+    }));
+  },
+  removeRerrol: () => {
+    set((state) => ({
+      ...state.rerrols,
+      rerrols: state.rerrols - 1,
+    }));
+  },
   addCurrentValue: (event, rowIndex) => {
     set((state) => {
       const teamPlaersCopy = [...state.teamPlayers];
@@ -89,6 +109,67 @@ export const useStore = create((set) => ({
       return {
         ...state,
         teamPlayers: teamPlaersCopy,
+      };
+    });
+  },
+  addPlayersQty: (position) => {
+    set((state) => {
+      console.log(state.playersQty);
+      const playersQtyCopy = state.playersQty;
+      playersQtyCopy[position] = playersQtyCopy[position]
+        ? playersQtyCopy[position] + 1
+        : 1;
+      return {
+        ...state.playersQty,
+        playersQty: playersQtyCopy,
+      };
+    });
+  },
+  removePlayersQty: (position) => {
+    set((state) => {
+      const playersQtyCopy = state.playersQty;
+      playersQtyCopy[position] = playersQtyCopy[position] - 1;
+      return {
+        ...state.playersQty,
+        playersQty: playersQtyCopy,
+      };
+    });
+  },
+  addItemCost: (cost) => {
+    set((state) => {
+      return {
+        ...state.totalPrice,
+        totalPrice: state.totalPrice + cost,
+      };
+    });
+  },
+  removeItemCost: (cost) => {
+    set((state) => {
+      return {
+        ...state.totalPrice,
+        totalPrice: state.totalPrice - cost,
+      };
+    });
+  },
+  addEnducement: (item) => {
+    set((state) => {
+      const teamEnducementsCopy = state.teamEnducements;
+      teamEnducementsCopy[item] = teamEnducementsCopy[item] + 1;
+      console.log(state.teamEnducements[item]);
+      return {
+        ...state.teamEnducements,
+        teamEnducements: teamEnducementsCopy,
+      };
+    });
+  },
+  removeEnducement: (item) => {
+    set((state) => {
+      const teamEnducementsCopy = state.teamEnducements;
+      teamEnducementsCopy[item] = teamEnducementsCopy[item] - 1;
+      console.log(state.teamEnducements[item]);
+      return {
+        ...state.teamEnducements,
+        teamEnducements: teamEnducementsCopy,
       };
     });
   },
@@ -105,6 +186,12 @@ function TeamCreator(props) {
     addTeamName,
     addRerrol,
     removeRerrol,
+    addPlayersQty,
+    removePlayersQty,
+    addItemCost,
+    removeItemCost,
+    addEnducement,
+    removeEnducement,
   } = useStore((state) => state);
 
   const state = useStore();
@@ -113,17 +200,6 @@ function TeamCreator(props) {
   const team = params.team;
   const [newPlayers, setNewPlayer] = useState([]);
   const [newTeamData, setNewTeamData] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-  // const [teamName, setTeamName] = useState("");
-  const [teamPlayersQty, setTeamPlayersQty] = useState({});
-  const [teamEnducements, setTeamEnducements] = useState({
-    reRolls: 0,
-    fanFactor: 0,
-    assistantCoaches: 0,
-    cheerleaders: 0,
-    apothecary: 0,
-    teamWizzard: 0,
-  });
 
   // useEffect(() => {
   //   const refState = window.localStorage.getItem("my-team-table");
@@ -158,93 +234,34 @@ function TeamCreator(props) {
             <div>{player.position}</div>
             <button
               disabled={
-                teamPlayersQty[player.position] <= 0 ||
-                teamPlayersQty[player.position] === undefined
+                state.playersQty[player.position] <= 0 ||
+                state.playersQty[player.position] === undefined
               }
               onClick={() => {
-                setTeamPlayersQty({
-                  ...teamPlayersQty,
-                  [player.position]: teamPlayersQty[player.position] - 1,
-                });
-                const index = teamPlayers.indexOf(player);
-                removePlr(index);
-                console.log(teamPlayers);
-                // const playerIndex = newPlayers.indexOf(player);
-                // newTeamData.splice(playerIndex, 1);
-                // newPlayers.splice(playerIndex, 1);
-                setTotalPrice(totalPrice - player.cost);
+                removePlayersQty(player.position);
+                removeItemCost(player.cost);
+                console.log(state.playersQty);
               }}
             >
               -
             </button>
             <button
-              disabled={teamPlayersQty[player.position] >= player.qty}
+              disabled={state.playersQty[player.position] >= player.qty}
               onClick={() => {
                 addPlr(player);
-                console.log(teamPlayers);
-                setTeamPlayersQty({
-                  ...teamPlayersQty,
-                  [player.position]: teamPlayersQty[player.position]
-                    ? teamPlayersQty[player.position] + 1
-                    : 1,
-                });
-                setTotalPrice(totalPrice + player.cost);
+                addPlayersQty(player.position);
+                addItemCost(player.cost);
               }}
             >
               +
             </button>
-            {teamPlayersQty[player.position]}/{player.qty}
+            {state.playersQty[player.position]
+              ? state.playersQty[player.position]
+              : 0}
+            /{player.qty}
           </div>
         );
       })}
-      {/* {teams[team].players.map((player) => {
-        return (
-          <div>
-            {player.position}
-            <button
-              disabled={
-                teamPlayersQty[player.position] <= 0 ||
-                teamPlayersQty[player.position] === undefined
-              }
-              onClick={() => {
-                setTeamPlayersQty({
-                  ...teamPlayersQty,
-                  [player.position]: teamPlayersQty[player.position] - 1,
-                });
-                const playerIndex = newPlayers.indexOf(player);
-                newTeamData.splice(playerIndex, 1);
-                newPlayers.splice(playerIndex, 1);
-                setTotalPrice(totalPrice - player.cost);
-              }}
-            >
-              -
-            </button>
-            <button
-              disabled={teamPlayersQty[player.position] >= player.qty}
-              onClick={() => {
-                setTeamPlayersQty({
-                  ...teamPlayersQty,
-                  [player.position]: teamPlayersQty[player.position]
-                    ? teamPlayersQty[player.position] + 1
-                    : 1,
-                });
-                setNewPlayer(newPlayers.concat(player.position));
-                setNewTeamData(newTeamData.concat({ ...player }));
-                setTotalPrice(totalPrice + player.cost);
-                console.log(newTeamData);
-                // setNewTeamData((state) => {
-                //   const stateCopy = [...state];
-                //   stateCopy[id] = player;
-                //   return stateCopy;
-                // });
-              }}
-            >
-              +
-            </button>
-            {teamPlayersQty[player.position]}/{player.qty}
-          </div>
-        );
-      })} */}
       <div>
         {newPlayers.map((player) => {
           return <div>{player}</div>;
@@ -253,165 +270,114 @@ function TeamCreator(props) {
       <div>
         Re-rolls
         <button
-          disabled={teamEnducements.reRolls < 1}
+          disabled={state.rerrols < 1}
           onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              reRolls: teamEnducements.reRolls - 1,
-            });
-            setTotalPrice(totalPrice - teams[team].teamRerolls.price);
+            removeRerrol();
+            removeItemCost(teams[team].teamRerolls.price);
+            console.log(state.rerrols);
           }}
         >
           -
         </button>
         <button
-          disabled={teamEnducements.reRolls >= 8}
+          disabled={state.rerrols >= 8}
           onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              reRolls: teamEnducements.reRolls + 1,
-            });
-            setTotalPrice(totalPrice + teams[team].teamRerolls.price);
+            addRerrol();
+            addItemCost(teams[team].teamRerolls.price);
+            console.log(state.rerolls);
           }}
         >
           +
         </button>
-        {teamEnducements.reRolls}
-      </div>
-      <div>
-        Fan factor
-        <button
-          onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              fanFactor: teamEnducements.fanFactor - 1,
-            });
-            setTotalPrice(totalPrice - 10000);
-          }}
-        >
-          -
-        </button>
-        <button
-          onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              fanFactor: teamEnducements.fanFactor + 1,
-            });
-            setTotalPrice(totalPrice + 10000);
-          }}
-        >
-          +
-        </button>
-        {teamEnducements.fanFactor}
+        {state.rerrols}
       </div>
       <div>
         Assistant coaches
         <button
-          disabled={teamEnducements.assistantCoaches <= 0}
+          disabled={state.teamEnducements.assistantCoaches <= 0}
           onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              assistantCoaches: teamEnducements.assistantCoaches - 1,
-            });
-            setTotalPrice(totalPrice - 10000);
+            removeEnducement("assistantCoaches");
+            removeItemCost(10000);
           }}
         >
           -
         </button>
         <button
-          disabled={teamEnducements.assistantCoaches >= 6}
+          disabled={state.teamEnducements.assistantCoaches >= 6}
           onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              assistantCoaches: teamEnducements.assistantCoaches + 1,
-            });
-            setTotalPrice(totalPrice + 10000);
+            addEnducement("assistantCoaches");
+            addItemCost(10000);
           }}
         >
           +
         </button>
-        {teamEnducements.assistantCoaches}
+        {state.teamEnducements.assistantCoaches}
       </div>
       <div>
         Cheerleaders
         <button
-          disabled={teamEnducements.cheerleaders <= 0}
+          disabled={state.teamEnducements.cheerleaders <= 0}
           onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              cheerleaders: teamEnducements.cheerleaders - 1,
-            });
-            setTotalPrice(totalPrice - 10000);
+            removeEnducement("cheerleaders");
+            removeItemCost(10000);
           }}
         >
           -
         </button>
         <button
-          disabled={teamEnducements.cheerleaders >= 12}
+          disabled={state.teamEnducements.cheerleaders >= 12}
           onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              cheerleaders: teamEnducements.cheerleaders + 1,
-            });
-            setTotalPrice(totalPrice + 10000);
+            addEnducement("cheerleaders");
+            addItemCost(10000);
           }}
         >
           +
         </button>
+        {state.teamEnducements.cheerleaders}
       </div>
       <div>
         Apothecary
         <button
-          disabled={teamEnducements.apothecary <= 0}
+          disabled={state.teamEnducements.apothecary <= 0}
           onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              apothecary: teamEnducements.apothecary - 1,
-            });
-            setTotalPrice(totalPrice - 50000);
+            removeEnducement("apothecary");
+            removeItemCost(50000);
           }}
         >
           -
         </button>
         <button
-          disabled={teamEnducements.apothecary >= 1}
+          disabled={state.teamEnducements.apothecary >= 1}
           onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              apothecary: teamEnducements.apothecary + 1,
-            });
-            setTotalPrice(totalPrice + 50000);
+            addEnducement("apothecary");
+            addItemCost(50000);
           }}
         >
           +
         </button>
+        {state.teamEnducements.apothecary}
       </div>
       <div>
         Team Wizzard
         <button
-          disabled={teamEnducements.teamWizzard <= 0}
+          disabled={state.teamEnducements.teamWizzard <= 0}
           onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              teamWizzard: teamEnducements.teamWizzard - 1,
-            });
-            setTotalPrice(totalPrice - 150000);
+            removeEnducement("teamWizzard");
+            removeItemCost(150000);
           }}
         >
           -
         </button>
         <button
-          disabled={teamEnducements.teamWizzard >= 1}
+          disabled={state.teamEnducements.teamWizzard >= 1}
           onClick={() => {
-            setTeamEnducements({
-              ...teamEnducements,
-              teamWizzard: teamEnducements.teamWizzard + 1,
-            });
-            setTotalPrice(totalPrice + 150000);
+            addEnducement("teamWizzard");
+            addItemCost(150000);
           }}
         >
           +
         </button>
+        {state.teamEnducements.teamWizzard}
       </div>
       <button
         onClick={() => {
@@ -432,15 +398,13 @@ function TeamCreator(props) {
             state: {
               newPlayers,
               newTeamData,
-              // teamName,
-              teamEnducements,
             },
           }}
         >
           Create team
         </Link>
       </button>
-      <div>Total price: {totalPrice}</div>
+      <div>Total price: {state.totalPrice}</div>
       <button
         onClick={() => {
           localStorage.clear();
