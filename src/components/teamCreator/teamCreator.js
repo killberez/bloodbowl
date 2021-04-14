@@ -173,6 +173,38 @@ export const useStore = create((set) => ({
       };
     });
   },
+  changeMng: (rowIndex) => {
+    set((state) => {
+      const teamPlayersCopy = [...state.teamPlayers];
+      teamPlayersCopy[rowIndex].mng = !teamPlayersCopy[rowIndex].mng
+      console.log(state.teamPlayers[rowIndex].mng)
+      return {
+        ...state,
+        teamPlayers: teamPlayersCopy,
+      };
+    })
+  },
+  addNi: (event, rowIndex) => {
+    set((state) => {
+      const teamPlayersCopy = [...state.teamPlayers];
+      teamPlayersCopy[rowIndex].ni = event;
+      return {
+        ...state,
+        teamPlayers: teamPlayersCopy,
+        // state.teamPlayers[rowIndex].spp + event,
+      };
+    });
+  },
+  addTr: (event, rowIndex) => {
+    set((state) => {
+      const teamPlaersCopy = [...state.teamPlayers];
+      teamPlaersCopy[rowIndex].tr = event;
+      return {
+        ...state,
+        teamPlayers: teamPlaersCopy,
+      };
+    });
+  },
 }));
 
 function TeamCreator(props) {

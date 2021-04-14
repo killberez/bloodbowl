@@ -4,9 +4,9 @@ import "./teamList.css";
 import { useTable } from "react-table";
 import { useLocation } from "react-router";
 import { specialRules } from "../../data.js";
-import { teams } from "../../data.js";
 import { useStore } from "../teamCreator/teamCreator";
 import _, { sortedUniqBy } from "lodash";
+import firebase from "../../config/firebase-config"
 
 function TeamList(props) {
   const state = useStore();
@@ -21,12 +21,12 @@ function TeamList(props) {
     teamName,
     rerrols,
     refreshRerrols,
+    changeMng,
+    addNi,
+    addTr
   } = useStore((state) => state);
   const location = useLocation();
-  // const teamName = location.state.teamName;
-  const playerNames = location.state.newPlayers;
   const teamData = location.state.newTeamData || [];
-  const teamEnducements = location.state.teamEnducements;
   const uniq = [...new Set(teamData)];
 
   function AddSkills() {
@@ -101,26 +101,6 @@ function TeamList(props) {
   const data = React.useMemo(
     () => [
       ...teamPlayers,
-      //   {
-      //     col1: "1",
-      //     col2: "Einstein",
-      //     col3: teamData[0],
-      //   },
-      //   { col1: "2", col2: "", col3: teamData[1] },
-      //   { col1: "3", col2: "", col3: teamData[2] },
-      //   { col1: "4", col2: "", col3: teamData[3] },
-      //   { col1: "5", col2: "", col3: teamData[4] },
-      //   { col1: "6", col2: "", col3: teamData[5] },
-      //   { col1: "7", col2: "", col3: teamData[6] },
-      //   { col1: "8", col2: "", col3: teamData[7] },
-      //   { col1: "9", col2: "", col3: teamData[8] },
-      //   { col1: "10", col2: "", col3: teamData[9] },
-      //   { col1: "11", col2: "", col3: teamData[10] },
-      //   { col1: "12", col2: "", col3: teamData[11] },
-      //   { col1: "13", col2: "", col3: teamData[12] },
-      //   { col1: "14", col2: "", col3: teamData[13] },
-      //   { col1: "15", col2: "", col3: teamData[14] },
-      //   { col1: "16", col2: "", col3: teamData[15] },
     ],
     [teamPlayers]
   );
@@ -226,23 +206,27 @@ function TeamList(props) {
       },
       {
         Header: "MNG",
-        accessor: (props) => (
+        accessor: (props, rowIndex) => (
           <input
-            style={{
-              color: "white",
-              width: "100%",
-              height: "100%",
-              background: "transparent",
-              border: "none",
-              outline: "none",
+            value={props.mng}
+            type="checkbox"
+            checked={state.teamPlayers[rowIndex].mng}
+            onChange={() => {
+              console.log(state.teamPlayers[rowIndex].mng)
+              changeMng(rowIndex)
+
             }}
           ></input>
         ),
       },
       {
         Header: "NI",
-        accessor: (props) => (
+        accessor: (props, rowIndex) => (
           <input
+            value={props.ni}
+            onChange={(event) => {
+              addNi(+event.target.value, rowIndex);
+            }}
             style={{
               color: "white",
               width: "100%",
@@ -256,8 +240,14 @@ function TeamList(props) {
       },
       {
         Header: "TR",
-        accessor: (props) => (
+        accessor: (props, rowIndex) => (
           <input
+            value={props.tr}
+            name="currentValue"
+            onChange={(event) => {
+              addTr(event.target.value, rowIndex);
+              console.log(event.target.value);
+            }}
             style={{
               color: "white",
               width: "100%",
@@ -308,22 +298,14 @@ function TeamList(props) {
       {teamName}
       <table
         {...getTableProps()}
-        //   style={{ width: "100%", borderCollapse: "collapse", opacity: 0.7 }}
       >
         <thead
-        //   style={{ borderCollapse: "collapse", textAlign: "left" }}
         >
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps()}
-                  // style={{
-                  //   background: "DodgerBlue",
-                  //   color: "white",
-                  //   fontWeight: "bold",
-                  //   border: "solid 2px DodgerBlue",
-                  // }}
                 >
                   {column.render("Header")}
                 </th>
@@ -340,11 +322,6 @@ function TeamList(props) {
                   return (
                     <td
                       {...cell.getCellProps()}
-                      // style={{
-                      //   padding: "10px",
-                      //   border: "solid 2px DodgerBlue",
-                      //   background: "LightSkyBlue",
-                      // }}
                     >
                       {cell.render("Cell")}
                     </td>
@@ -355,10 +332,18 @@ function TeamList(props) {
           })}
         </tbody>
       </table>
+      <div>Total cost: {state.totalPrice}</div>
+      <div>Assistant coaches: {state.teamEnducements.assistantCoaches}</div>
+      <div>Cheerleaders: {state.teamEnducements.cheerleaders}</div>
+      <div>Apothecary: {state.teamEnducements.apothecary}</div>
+      <div>Team Wizzard: {state.teamEnducements.teamWizzard}</div>
       <div>Re-rolls:{rerrols}</div>
       <button
         onClick={() => {
-          localStorage.clear();
+          const name = state.teamName
+          firebase.database().ref('teams/' + name).set(state.teamPlayers)
+          firebase.database().ref('teams/' + name + "/rerrols").set(state.rerrols)
+          firebase.database().ref('teams/' + name + "/enducements").set(state.teamEnducements)
         }}
       >
         RESET
@@ -371,45 +356,3 @@ function TeamList(props) {
 }
 
 export default TeamList;
-
-// function TeamList() {
-//   const [raw, setRaw] = useState(0);
-
-//   function rows() {
-//     return (
-//       <tr>
-//           {()}
-//       </tr>
-//     );
-//   }
-
-//   return (
-//     <div className="teamListMain">
-//       <table className="teamListTable">
-//         <tr>
-//           <th>N</th>
-//           <th>name</th>
-//           <th>position</th>
-//           <th>MA</th>
-//           <th>ST</th>
-//           <th>AG</th>
-//           <th>PA</th>
-//           <th>AV</th>
-//           <th>skills</th>
-//           <th>hiring fee</th>
-//           <th>unspent spp</th>
-//           <th>MNG</th>
-//           <th>NI</th>
-//           <th>TR</th>
-//           <th>current value</th>
-//         </tr>
-//         <tr>
-//           <th></th>
-//         </tr>
-//         <tr></tr>
-//       </table>
-//     </div>
-//   );
-// }
-
-// export default TeamList;
