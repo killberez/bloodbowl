@@ -346,7 +346,7 @@ function TeamList(props) {
           firebase.database().ref('teams/' + name + "/enducements").set(state.teamEnducements)
         }}
       >
-        RESET
+        Save Team
       </button>
       <div>
         <AddSkills />
