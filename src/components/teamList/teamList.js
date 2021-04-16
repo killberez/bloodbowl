@@ -26,8 +26,8 @@ function TeamList(props) {
     addTr
   } = useStore((state) => state);
   const location = useLocation();
-  const teamData = location.state.newTeamData || [];
-  const uniq = [...new Set(teamData)];
+  // const teamData = location.state.newTeamData || [];
+  // const uniq = [...new Set(teamData)];
 
   function AddSkills() {
     const skills = [];
@@ -341,7 +341,7 @@ function TeamList(props) {
       <button
         onClick={() => {
           const name = state.teamName
-          firebase.database().ref('teams/' + name).set(state.teamPlayers)
+          firebase.database().ref('teams/' + name + "/players").set(state.teamPlayers)
           firebase.database().ref('teams/' + name + "/rerrols").set(state.rerrols)
           firebase.database().ref('teams/' + name + "/enducements").set(state.teamEnducements)
         }}
