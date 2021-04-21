@@ -398,7 +398,7 @@ export const teams = {
         mng: false,
         ni: 0,
         tr: "-",
-        skillsTraits: [],
+        skillsTraits: [""],
         primary: "GMS",
         secondary: "A",
       },

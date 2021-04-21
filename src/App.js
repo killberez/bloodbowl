@@ -4,7 +4,7 @@ import TeamList from "./components/teamList/teamList.js";
 import TeamChoise from "./components/teamChoise/teamChoise.js";
 import MainPaige from "./components/mainPaige/mainPaige.js";
 import TeamCreator from "./components/teamCreator/teamCreator.js";
-import TeamsPage from "./components/teams/teams.js"
+import TeamsPage from "./components/teams/teams.js";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           <Route exact path="/teamcreator/:team">
             <TeamCreator />
           </Route>
-          <Route exact path="/teamlist/">
+          <Route exact path="/teamlist/:team">
             <TeamList />
           </Route>
           <Route exact path="/teams">

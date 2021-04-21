@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useRowSelect } from "react-table";
 import "./teamList.css";
 import { useTable } from "react-table";
-import { useLocation } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { specialRules } from "../../data.js";
 import { useStore } from "../teamCreator/teamCreator";
 import _, { sortedUniqBy } from "lodash";
-import firebase from "../../config/firebase-config"
+import firebase from "../../config/firebase-config";
+import { Link } from "react-router-dom";
+import { teams } from "../../data.js";
 
 function TeamList(props) {
   const state = useStore();
@@ -23,11 +25,13 @@ function TeamList(props) {
     refreshRerrols,
     changeMng,
     addNi,
-    addTr
+    addTr,
+    removePlrFromTable,
+    addPlr,
   } = useStore((state) => state);
   const location = useLocation();
-  // const teamData = location.state.newTeamData || [];
-  // const uniq = [...new Set(teamData)];
+  const params = useParams();
+  const team = params.team;
 
   function AddSkills() {
     const skills = [];
@@ -47,63 +51,7 @@ function TeamList(props) {
     });
   }
 
-  // useEffect(() => {
-  //   const refState = window.localStorage.getItem("rerrols");
-  //   if (
-  //     rerrols.length &&
-  //     (!refState || !_.isEqual(rerrols, JSON.parse(refState)))
-  //   ) {
-  //     window.localStorage.setItem("rerrols", JSON.stringify(rerrols));
-  //   }
-  // }, [rerrols]);
-
-  // useEffect(() => {
-  //   const refState = window.localStorage.getItem("rerrols");
-  //   if (!rerrols.length && refState) {
-  //     refreshRerrols(JSON.parse(refState));
-  //   }
-  // }, [rerrols]);
-
-  // useEffect(() => {
-  //   const refState = window.localStorage.getItem("team-name");
-  //   if (
-  //     teamName.length &&
-  //     (!refState || !_.isEqual(teamName, JSON.parse(refState)))
-  //   ) {
-  //     window.localStorage.setItem("team-name", JSON.stringify(teamName));
-  //   }
-  // }, [teamName]);
-
-  // useEffect(() => {
-  //   const refState = window.localStorage.getItem("team-name");
-  //   if (!teamName.length && refState) {
-  //     refreshName(JSON.parse(refState));
-  //   }
-  // }, [teamName]);
-
-  // useEffect(() => {
-  //   const refState = window.localStorage.getItem("my-team-table");
-  //   if (
-  //     teamPlayers.length &&
-  //     (!refState || !_.isEqual(teamPlayers, JSON.parse(refState)))
-  //   ) {
-  //     window.localStorage.setItem("my-team-table", JSON.stringify(teamPlayers));
-  //   }
-  // }, [teamPlayers]);
-
-  // useEffect(() => {
-  //   const refState = window.localStorage.getItem("my-team-table");
-  //   if (!teamPlayers.length && refState) {
-  //     refreshState(JSON.parse(refState));
-  //   }
-  // }, [teamPlayers]);
-
-  const data = React.useMemo(
-    () => [
-      ...teamPlayers,
-    ],
-    [teamPlayers]
-  );
+  const data = React.useMemo(() => [...teamPlayers], [teamPlayers]);
 
   const columns = React.useMemo(
     () => [
@@ -212,9 +160,8 @@ function TeamList(props) {
             type="checkbox"
             checked={state.teamPlayers[rowIndex].mng}
             onChange={() => {
-              console.log(state.teamPlayers[rowIndex].mng)
-              changeMng(rowIndex)
-
+              console.log(state.teamPlayers[rowIndex].mng);
+              changeMng(rowIndex);
             }}
           ></input>
         ),
@@ -281,6 +228,19 @@ function TeamList(props) {
           ></input>
         ),
       },
+      {
+        Header: "DEL",
+        accessor: (rowIndex) => (
+          <button
+            onClick={() => {
+              removePlrFromTable(rowIndex);
+              console.log(rowIndex);
+            }}
+          >
+            X
+          </button>
+        ),
+      },
     ],
     []
   );
@@ -296,19 +256,12 @@ function TeamList(props) {
   return (
     <div>
       {teamName}
-      <table
-        {...getTableProps()}
-      >
-        <thead
-        >
+      <table {...getTableProps()}>
+        <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps()}
-                >
-                  {column.render("Header")}
-                </th>
+                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
               ))}
             </tr>
           ))}
@@ -320,17 +273,14 @@ function TeamList(props) {
               <tr className="tableBody" {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
-                    <td
-                      {...cell.getCellProps()}
-                    >
-                      {cell.render("Cell")}
-                    </td>
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                   );
                 })}
               </tr>
             );
           })}
         </tbody>
+        <div className="addPlayer">Add player</div>
       </table>
       <div>Total cost: {state.totalPrice}</div>
       <div>Assistant coaches: {state.teamEnducements.assistantCoaches}</div>
@@ -340,13 +290,30 @@ function TeamList(props) {
       <div>Re-rolls:{rerrols}</div>
       <button
         onClick={() => {
-          const name = state.teamName
-          firebase.database().ref('teams/' + name + "/players").set(state.teamPlayers)
-          firebase.database().ref('teams/' + name + "/rerrols").set(state.rerrols)
-          firebase.database().ref('teams/' + name + "/enducements").set(state.teamEnducements)
+          const name = state.teamName;
+          console.log(teamName);
+          firebase
+            .database()
+            .ref("teams/" + name + "/teamType")
+            .set(state.teamType);
+          firebase
+            .database()
+            .ref("teams/" + name + "/players")
+            .set(state.teamPlayers);
+          firebase
+            .database()
+            .ref("teams/" + name + "/rerrols")
+            .set(state.rerrols);
+          firebase
+            .database()
+            .ref("teams/" + name + "/enducements")
+            .set(state.teamEnducements);
         }}
       >
         Save Team
+      </button>
+      <button>
+        <Link to={"/teamcreator/" + team}>Team setings</Link>
       </button>
       <div>
         <AddSkills />
@@ -356,3 +323,54 @@ function TeamList(props) {
 }
 
 export default TeamList;
+
+// useEffect(() => {
+//   const refState = window.localStorage.getItem("rerrols");
+//   if (
+//     rerrols.length &&
+//     (!refState || !_.isEqual(rerrols, JSON.parse(refState)))
+//   ) {
+//     window.localStorage.setItem("rerrols", JSON.stringify(rerrols));
+//   }
+// }, [rerrols]);
+
+// useEffect(() => {
+//   const refState = window.localStorage.getItem("rerrols");
+//   if (!rerrols.length && refState) {
+//     refreshRerrols(JSON.parse(refState));
+//   }
+// }, [rerrols]);
+
+// useEffect(() => {
+//   const refState = window.localStorage.getItem("team-name");
+//   if (
+//     teamName.length &&
+//     (!refState || !_.isEqual(teamName, JSON.parse(refState)))
+//   ) {
+//     window.localStorage.setItem("team-name", JSON.stringify(teamName));
+//   }
+// }, [teamName]);
+
+// useEffect(() => {
+//   const refState = window.localStorage.getItem("team-name");
+//   if (!teamName.length && refState) {
+//     refreshName(JSON.parse(refState));
+//   }
+// }, [teamName]);
+
+// useEffect(() => {
+//   const refState = window.localStorage.getItem("my-team-table");
+//   if (
+//     teamPlayers.length &&
+//     (!refState || !_.isEqual(teamPlayers, JSON.parse(refState)))
+//   ) {
+//     window.localStorage.setItem("my-team-table", JSON.stringify(teamPlayers));
+//   }
+// }, [teamPlayers]);
+
+// useEffect(() => {
+//   const refState = window.localStorage.getItem("my-team-table");
+//   if (!teamPlayers.length && refState) {
+//     refreshState(JSON.parse(refState));
+//   }
+// }, [teamPlayers]);

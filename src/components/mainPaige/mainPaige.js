@@ -5,64 +5,65 @@ import "./mainPaige.css";
 import button from "./createTeam.jpg";
 import { googleProvider } from "../../config/authMethod";
 import socialMediaAuth from "../../service/auth";
-import firebase from "firebase"
-import { useStore } from "../teamCreator/teamCreator.js"
-
+import firebase from "firebase";
+import { useStore } from "../teamCreator/teamCreator.js";
 
 function MainPaige() {
-  const state = useStore()
-  const [teamsNames, setTeamsNames] = useState("")
-  const [teamsData, setTeamsData] = useState("")
+  const state = useStore();
+  const [teamsNames, setTeamsNames] = useState("");
+  const [teamsData, setTeamsData] = useState("");
 
   useEffect(() => {
     const dataRef = firebase.database().ref("teams");
-    dataRef.on('value', (snapshot) => {
-      const dbData = snapshot.val()
-      const namesArray = []
+    dataRef.on("value", (snapshot) => {
+      const dbData = snapshot.val();
+      const namesArray = [];
       for (const team in dbData) {
-        namesArray.push(team)
+        namesArray.push(team);
       }
-      setTeamsNames(namesArray)
-      setTeamsData(dbData)
-      console.log(teamsNames)
-      console.log(teamsData)
-    })
-  }, [])
+      setTeamsNames(namesArray);
+      setTeamsData(dbData);
+      console.log(dbData);
+      console.log(teamsNames);
+      console.log(teamsData);
+    });
+  }, []);
 
   const putTeamInState = (name) => {
-    const team = name
-    state.teamPlayers = teamsData[name].players
-    state.rerrols = teamsData[name].rerrols
-    state.enducements = teamsData[name].enducements
+    const team = name;
+    state.teamName = team;
+    console.log(team);
+    state.teamPlayers = teamsData[name].players;
+    state.rerrols = teamsData[name].rerrols;
+    state.enducements = teamsData[name].enducements;
 
-    console.log(teamsData[team])
-  }
+    console.log(teamsData[team]);
+  };
 
   const handleOnClick = async (provider) => {
-    const res = await socialMediaAuth(provider)
-    console.log(res)
-  }
+    const res = await socialMediaAuth(provider);
+    console.log(res);
+  };
 
   return (
     <div className="mainDiv">
       <button onClick={() => handleOnClick(googleProvider)}>Google</button>
-      <button onClick={() => {
-      }}><Link to={{
-        pathname: "/teams",
-        // state: {
-        //   data
-        // },
-      }}>Teams</Link></button>
       <div>
         <Link to="teamchoise">
           <img src={button} />
         </Link>
       </div>
-      <div>{teamsNames ? teamsNames.map((team) => {
-        return (
-          <button onClick={() => putTeamInState(team)}><Link to={"/teamlist/"}>{team}</Link></button>
-        )
-      }) : ""}</div>
+      <div>
+        {teamsNames
+          ? teamsNames.map((team) => {
+              return (
+                <button onClick={() => putTeamInState(team)}>
+                  <Link to={"/teamlist/" + team}>{team}</Link>
+                </button>
+              );
+            })
+          : ""}
+      </div>
     </div>
   );
 }
