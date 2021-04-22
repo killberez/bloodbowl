@@ -28,10 +28,18 @@ function TeamList(props) {
     addTr,
     removePlrFromTable,
     addPlr,
+    removeItemCost,
   } = useStore((state) => state);
   const location = useLocation();
   const params = useParams();
   const team = params.team;
+  useEffect(() => {
+    localStorage.setItem("teamState", state.teamPlayers);
+  }, [state]);
+  useEffect(() => {
+    const parseState = localStorage.getItem("teamState");
+    console.log(parseState);
+  }, []);
 
   function AddSkills() {
     const skills = [];
@@ -234,6 +242,7 @@ function TeamList(props) {
           <button
             onClick={() => {
               removePlrFromTable(rowIndex);
+              removeItemCost(rowIndex.cost);
               console.log(rowIndex);
             }}
           >
@@ -308,6 +317,10 @@ function TeamList(props) {
             .database()
             .ref("teams/" + name + "/enducements")
             .set(state.teamEnducements);
+          firebase
+            .database()
+            .ref("teams/" + name + "/totalPrice")
+            .set(state.totalPrice);
         }}
       >
         Save Team

@@ -36,6 +36,7 @@ function MainPaige() {
     state.teamPlayers = teamsData[name].players;
     state.rerrols = teamsData[name].rerrols;
     state.enducements = teamsData[name].enducements;
+    state.totalPrice = teamsData[name].totalPrice;
 
     console.log(teamsData[team]);
   };
