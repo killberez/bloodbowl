@@ -28,6 +28,10 @@ const options = [
     label: "Ogre Teams",
     value: "ogreTeams",
   },
+  {
+    label: "Dwarfs",
+    value: "dwarfs",
+  },
 ];
 
 function TeamChoise() {
