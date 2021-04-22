@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useRowSelect } from "react-table";
 import "./teamList.css";
 import { useTable } from "react-table";
 import { useLocation, useParams } from "react-router";
@@ -7,8 +6,6 @@ import { specialRules } from "../../data.js";
 import { useStore } from "../teamCreator/teamCreator";
 import _, { sortedUniqBy } from "lodash";
 import firebase from "../../config/firebase-config";
-import { Link } from "react-router-dom";
-import { teams } from "../../data.js";
 
 function TeamList(props) {
   const state = useStore();
@@ -324,9 +321,6 @@ function TeamList(props) {
         }}
       >
         Save Team
-      </button>
-      <button>
-        <Link to={"/teamcreator/" + team}>Team setings</Link>
       </button>
       <div>
         <AddSkills />
