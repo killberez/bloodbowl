@@ -32,6 +32,10 @@ const options = [
     label: "Dwarfs",
     value: "dwarfs",
   },
+  {
+    label: "Skaven Teams",
+    value: "skavenTeams",
+  },
 ];
 
 function TeamChoise() {
