@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import TeamCreator from "../teamCreator/teamCreator.js";
+
 import { useStore } from "../teamCreator/teamCreator.js"
+
+
 const options = [
   {
     label: "-",
@@ -27,11 +29,20 @@ const options = [
     label: "Ogre Teams",
     value: "ogreTeams",
   },
+  {
+    label: "Dwarfs",
+    value: "dwarfs",
+  },
+  {
+    label: "Skaven Teams",
+    value: "skavenTeams",
+  },
 ];
 
 function TeamChoise() {
-  const state = useStore()
+  // const state = useStore()
   const [team, setTeam] = useState("");
+  const { addTeamType } = useStore((state) => state);
 
   return (
     <div className="mainDiv">
@@ -48,10 +59,9 @@ function TeamChoise() {
       <button>
         <Link to="/">Back</Link>
       </button>
-      <button >
-        <Link disabled={state} to={"/teamcreator/" + team}>Next</Link>
+      <button onClick={() => addTeamType(team)}>
+        <Link to={"/teamcreator/" + team}>Next</Link>
       </button>
-      {/* <TeamCreator data={team} /> */}
     </div>
   );
 }

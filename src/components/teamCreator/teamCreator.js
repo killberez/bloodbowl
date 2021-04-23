@@ -13,6 +13,7 @@ import _ from "lodash";
 import "./teamCreator.css";
 
 export const useStore = create((set) => ({
+  teamType: "",
   teamPlayers: [],
   playersQty: {},
   teamName: 0,
@@ -24,6 +25,11 @@ export const useStore = create((set) => ({
     teamWizzard: 0,
   },
   totalPrice: 0,
+  addTeamType: (team) =>
+    set((state) => ({
+      ...state,
+      teamType: team,
+    })),
   refreshRerrols: (refState) =>
     set((state) => ({
       ...state,
@@ -39,10 +45,10 @@ export const useStore = create((set) => ({
       ...state.teamName,
       teamName: event,
     })),
-  refreshState: (reState) =>
+  refreshState: (refState) =>
     set((state) => ({
       ...state,
-      teamPlayers: reState,
+      state: refState,
     })),
   addPlr: (player) =>
     set((state) => ({
@@ -176,13 +182,13 @@ export const useStore = create((set) => ({
   changeMng: (rowIndex) => {
     set((state) => {
       const teamPlayersCopy = [...state.teamPlayers];
-      teamPlayersCopy[rowIndex].mng = !teamPlayersCopy[rowIndex].mng
-      console.log(state.teamPlayers[rowIndex].mng)
+      teamPlayersCopy[rowIndex].mng = !teamPlayersCopy[rowIndex].mng;
+      console.log(state.teamPlayers[rowIndex].mng);
       return {
         ...state,
         teamPlayers: teamPlayersCopy,
       };
-    })
+    });
   },
   addNi: (event, rowIndex) => {
     set((state) => {
@@ -202,6 +208,20 @@ export const useStore = create((set) => ({
       return {
         ...state,
         teamPlayers: teamPlaersCopy,
+      };
+    });
+  },
+  removePlrFromTable: (rowIndex) => {
+    set((state) => {
+      let teamPlayersCopy = [...state.teamPlayers];
+      let Index = teamPlayersCopy.findIndex((index) => index === rowIndex);
+      teamPlayersCopy.splice(Index, 1);
+
+      console.log(Index);
+
+      return {
+        ...state,
+        teamPlayers: teamPlayersCopy,
       };
     });
   },
@@ -227,7 +247,6 @@ function TeamCreator(props) {
   } = useStore((state) => state);
 
   const state = useStore();
-
   const params = useParams();
   const team = params.team;
   const [newPlayers, setNewPlayer] = useState([]);
@@ -426,7 +445,7 @@ function TeamCreator(props) {
       <button>
         <Link
           to={{
-            pathname: "/teamlist",
+            pathname: "/teamlist/" + team,
             state: {
               newPlayers,
               newTeamData,
@@ -450,55 +469,5 @@ function TeamCreator(props) {
     </div>
   );
 }
-// function AddPlayer() {
-//   return (
-//     <div>
-//       <input></input>
-//       <button>submit</button>
-//     </div>
-//   );
-// }
-
-// function TeamCreator(props) {
-//   const [forms, setForms] = useState({});
-//   const location = useLocation();
-//   const params = useParams();
-//   console.log(forms);
-//   const team = params.team;
-//   //   console.log(teams[location.state.team]);
-//   //   const team = teams[location.state.team];
-//   return (
-//     <div>
-//       <button onClick={() => console.log(teams[team].players[0].position)}>
-//         1
-//       </button>
-//       <div>
-//         {teams[team].players.map((player) => {
-//           return (
-//             <div>
-//               <div>{player.position}</div>
-//               {forms[player.position] &&
-//                 forms[player.position].map((player) => <AddPlayer />)}
-//               {/* <button onClick={removePlayer()}>-</button> */}
-//               <button
-//                 onClick={() =>
-//                   setForms({
-//                     ...forms,
-//                     [player.position]: [
-//                       ...(forms[player.position] || []),
-//                       { name: "test", qty: 1 },
-//                     ],
-//                   })
-//                 }
-//               >
-//                 +
-//               </button>
-//             </div>
-//           );
-//         })}
-//       </div>
-//     </div>
-//   );
-// }
 
 export default TeamCreator;
