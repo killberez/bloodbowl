@@ -7,8 +7,12 @@ import { googleProvider } from "../../config/authMethod";
 import socialMediaAuth from "../../service/auth";
 import firebase from "firebase";
 import { useStore } from "../teamCreator/teamCreator.js";
+import { teams } from "../../data";
 
 function MainPaige() {
+  const { putTeamInState, addTeamTemplate, removeState } = useStore(
+    (state) => state
+  );
   const state = useStore();
   const [teamsNames, setTeamsNames] = useState("");
   const [teamsData, setTeamsData] = useState("");
@@ -23,43 +27,48 @@ function MainPaige() {
       }
       setTeamsNames(namesArray);
       setTeamsData(dbData);
-      console.log(dbData);
-      console.log(teamsNames);
-      console.log(teamsData);
     });
   }, []);
 
-  const putTeamInState = (name) => {
-    const team = name;
-    state.teamName = team;
-    console.log(team);
-    state.teamPlayers = teamsData[name].players;
-    state.rerrols = teamsData[name].rerrols;
-    state.enducements = teamsData[name].enducements;
-    state.totalPrice = teamsData[name].totalPrice;
-
-    console.log(teamsData[team]);
-  };
-
   const handleOnClick = async (provider) => {
-    const res = await socialMediaAuth(provider);
-    console.log(res);
+    const user = await socialMediaAuth(provider);
+    console.log(user.displayName);
   };
 
   return (
     <div className="mainDiv">
-      <button onClick={() => handleOnClick(googleProvider)}>Google</button>
+      <button
+        onClick={() => {
+          window.sessionStorage.clear();
+          handleOnClick(googleProvider);
+        }}
+      >
+        Google
+      </button>
       <div>
         <Link to="teamchoise">
-          <img src={button} />
+          <img
+            onClick={() => {
+              window.sessionStorage.clear();
+              removeState();
+            }}
+            src={button}
+          />
         </Link>
       </div>
       <div>
         {teamsNames
-          ? teamsNames.map((team) => {
+          ? teamsNames.map((teamName) => {
               return (
-                <button onClick={() => putTeamInState(team)}>
-                  <Link to={"/teamlist/" + team}>{team}</Link>
+                <button
+                  onClick={() => {
+                    window.sessionStorage.clear();
+                    putTeamInState(teamName, teamsData[teamName]);
+                    addTeamTemplate(teams[teamsData[teamName].teamType]);
+                    console.log(teamsData[teamName].teamType);
+                  }}
+                >
+                  <Link to={"/teamlist/" + teamName}>{teamName}</Link>
                 </button>
               );
             })

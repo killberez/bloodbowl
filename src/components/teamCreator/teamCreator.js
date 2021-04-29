@@ -13,6 +13,7 @@ import _ from "lodash";
 import "./teamCreator.css";
 
 export const useStore = create((set) => ({
+  teamTemplate: {},
   teamType: "",
   teamPlayers: [],
   playersQty: {},
@@ -25,6 +26,38 @@ export const useStore = create((set) => ({
     teamWizzard: 0,
   },
   totalPrice: 0,
+  removeState: () =>
+    set((state) => ({
+      ...state,
+      teamTemplate: {},
+      teamType: "",
+      teamPlayers: [],
+      playersQty: {},
+      teamName: 0,
+      rerrols: 0,
+      teamEnducements: {
+        assistantCoaches: 0,
+        cheerleaders: 0,
+        apothecary: 0,
+        teamWizzard: 0,
+      },
+      totalPrice: 0,
+    })),
+  addTeamTemplate: (team) =>
+    set((state) => ({
+      ...state,
+      teamTemplate: team,
+    })),
+  putTeamInState: (teamName, teamData) =>
+    set((state) => ({
+      ...state,
+      teamType: teamData.teamType,
+      teamName: teamName,
+      teamPlayers: teamData.players,
+      rerrols: teamData.rerrols,
+      teamEnducements: teamData.enducements,
+      totalPrice: teamData.totalPrice,
+    })),
   addTeamType: (team) =>
     set((state) => ({
       ...state,
@@ -35,6 +68,16 @@ export const useStore = create((set) => ({
       ...state,
       rerrols: refState,
     })),
+  refreshState: (data) =>
+    set((state) => ({
+      ...state,
+      teamName: data.teamName,
+      teamType: data.teamType,
+      teamPlayers: data.teamPlayers,
+      rerrols: data.rerrols,
+      teamEnducements: data.teamEnducements,
+      totalPrice: data.totalPrice,
+    })),
   refreshName: (refState) =>
     set((state) => ({
       ...state,
@@ -44,11 +87,6 @@ export const useStore = create((set) => ({
     set((state) => ({
       ...state.teamName,
       teamName: event,
-    })),
-  refreshState: (reState) =>
-    set((state) => ({
-      ...state,
-      teamPlayers: reState,
     })),
   addPlr: (player) =>
     set((state) => ({
@@ -252,23 +290,6 @@ function TeamCreator(props) {
   const [newPlayers, setNewPlayer] = useState([]);
   const [newTeamData, setNewTeamData] = useState([]);
 
-  // useEffect(() => {
-  //   const refState = window.localStorage.getItem("my-team-table");
-  //   if (
-  //     teamPlayers.length &&
-  //     (!refState || !_.isEqual(teamPlayers, JSON.parse(refState)))
-  //   ) {
-  //     window.localStorage.setItem("my-team-table", JSON.stringify(teamPlayers));
-  //   }
-  // }, [teamPlayers]);
-
-  // useEffect(() => {
-  //   const refState = window.localStorage.getItem("my-team-table");
-  //   if (!teamPlayers.length && refState) {
-  //     refreshState(JSON.parse(refState));
-  //   }
-  // }, [teamPlayers]);
-
   return (
     <div className="mainDiv">
       Team name
@@ -456,13 +477,6 @@ function TeamCreator(props) {
         </Link>
       </button>
       <div>Total price: {state.totalPrice}</div>
-      <button
-        onClick={() => {
-          localStorage.clear();
-        }}
-      >
-        RESET
-      </button>
       <button>
         <Link to="/teamchoise">Go back</Link>
       </button>

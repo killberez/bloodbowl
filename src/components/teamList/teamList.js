@@ -4,8 +4,9 @@ import { useTable } from "react-table";
 import { useLocation, useParams } from "react-router";
 import { specialRules } from "../../data.js";
 import { useStore } from "../teamCreator/teamCreator";
-import _, { sortedUniqBy } from "lodash";
+import _, { hasIn, sortedUniqBy } from "lodash";
 import firebase from "../../config/firebase-config";
+import { teams } from "../../data.js";
 
 function TeamList(props) {
   const state = useStore();
@@ -26,21 +27,35 @@ function TeamList(props) {
     removePlrFromTable,
     addPlr,
     removeItemCost,
+    removePlayersQty,
+    addPlayersQty,
+    addItemCost,
+    teamTemplate,
   } = useStore((state) => state);
   const location = useLocation();
-  const params = useParams();
-  const team = params.team;
+
   useEffect(() => {
-    localStorage.setItem("teamState", state.teamPlayers);
+    const dataInSessionStorage = JSON.parse(
+      window.sessionStorage.getItem("state")
+    );
+    if (state && !dataInSessionStorage) {
+      window.sessionStorage.setItem("state", JSON.stringify(state));
+    }
   }, [state]);
+
   useEffect(() => {
-    const parseState = localStorage.getItem("teamState");
-    console.log(parseState);
-  }, []);
+    const dataInSessionStorage = JSON.parse(
+      window.sessionStorage.getItem("state")
+    );
+    console.log(state);
+    if (!state.rerrols && dataInSessionStorage) {
+      refreshState(dataInSessionStorage);
+    }
+  }, [state]);
 
   function AddSkills() {
     const skills = [];
-    teamPlayers.map((player) => {
+    state.teamPlayers.map((player) => {
       player.skillsTraits.map((skill) => {
         skills.push(skill);
       });
@@ -56,6 +71,27 @@ function TeamList(props) {
     });
   }
 
+  function addPlayers() {
+    if (state.teamType) {
+      return teams[state.teamType].players.map((player) => {
+        return (
+          <div>
+            {player.position}
+            <button
+              onClick={() => {
+                addPlr(player);
+                addPlayersQty(player.position);
+                addItemCost(player.cost);
+              }}
+            >
+              +
+            </button>
+          </div>
+        );
+      });
+    }
+  }
+
   const data = React.useMemo(() => [...teamPlayers], [teamPlayers]);
 
   const columns = React.useMemo(
@@ -67,6 +103,7 @@ function TeamList(props) {
             value={props.number}
             name="number"
             onChange={(event) => {
+              window.sessionStorage.clear();
               addNumber(event.target.value, rowIndex);
               console.log(state.teamPlayers);
             }}
@@ -88,6 +125,7 @@ function TeamList(props) {
             value={props.name}
             name="name"
             onChange={(event) => {
+              window.sessionStorage.clear();
               addName(event.target.value, rowIndex);
               console.log();
               console.log(event.target.name, "-", event.target.value);
@@ -142,6 +180,7 @@ function TeamList(props) {
             value={props.spp}
             name="spp"
             onChange={(event) => {
+              window.sessionStorage.clear();
               addSpp(+event.target.value, rowIndex);
               console.log();
               console.log(event.target.name, "-", event.target.value);
@@ -159,17 +198,18 @@ function TeamList(props) {
       },
       {
         Header: "MNG",
-        accessor: (props, rowIndex) => (
-          <input
-            value={props.mng}
-            type="checkbox"
-            checked={state.teamPlayers[rowIndex].mng}
-            onChange={() => {
-              console.log(state.teamPlayers[rowIndex].mng);
-              changeMng(rowIndex);
-            }}
-          ></input>
-        ),
+        accessor: "mng",
+        // accessor: (props, rowIndex) => (
+        //   <input
+        //     value={props.mng}
+        //     type="checkbox"
+        //     checked={state.teamPlayers[rowIndex].mng}
+        //     onChange={() => {
+        //       console.log(state.teamPlayers[rowIndex].mng);
+        //       changeMng(rowIndex);
+        //     }}
+        //   ></input>
+        // ),
       },
       {
         Header: "NI",
@@ -177,6 +217,7 @@ function TeamList(props) {
           <input
             value={props.ni}
             onChange={(event) => {
+              window.sessionStorage.clear();
               addNi(+event.target.value, rowIndex);
             }}
             style={{
@@ -197,6 +238,7 @@ function TeamList(props) {
             value={props.tr}
             name="currentValue"
             onChange={(event) => {
+              window.sessionStorage.clear();
               addTr(event.target.value, rowIndex);
               console.log(event.target.value);
             }}
@@ -219,6 +261,7 @@ function TeamList(props) {
             name="currentValue"
             onChange={(event) => {
               addCurrentValue(+event.target.value, rowIndex);
+              window.sessionStorage.clear();
               console.log();
               console.log(event.target.name, "-", event.target.value);
             }}
@@ -240,6 +283,7 @@ function TeamList(props) {
             onClick={() => {
               removePlrFromTable(rowIndex);
               removeItemCost(rowIndex.cost);
+              window.sessionStorage.clear();
               console.log(rowIndex);
             }}
           >
@@ -262,6 +306,7 @@ function TeamList(props) {
   return (
     <div>
       {teamName}
+      <div>{addPlayers()}</div>
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -286,7 +331,6 @@ function TeamList(props) {
             );
           })}
         </tbody>
-        <div className="addPlayer">Add player</div>
       </table>
       <div>Total cost: {state.totalPrice}</div>
       <div>Assistant coaches: {state.teamEnducements.assistantCoaches}</div>
