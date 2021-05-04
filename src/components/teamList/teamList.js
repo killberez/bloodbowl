@@ -333,6 +333,7 @@ function TeamList(props) {
         </tbody>
       </table>
       <div>Total cost: {state.totalPrice}</div>
+      <div>Dedicated fans: {state.dedicatedFans}</div>
       <div>Assistant coaches: {state.teamEnducements.assistantCoaches}</div>
       <div>Cheerleaders: {state.teamEnducements.cheerleaders}</div>
       <div>Apothecary: {state.teamEnducements.apothecary}</div>

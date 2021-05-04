@@ -24,6 +24,7 @@ export const useStore = create((set) => ({
     cheerleaders: 0,
     apothecary: 0,
     teamWizzard: 0,
+    dedicatedFans: 0,
   },
   totalPrice: 0,
   removeState: () =>
@@ -384,6 +385,28 @@ function TeamCreator(props) {
           +
         </button>
         {state.teamEnducements.assistantCoaches}
+      </div>
+      <div>
+        Dedicated dedicated
+        <button
+          disabled={state.teamEnducements.dedicatedFans <= 0}
+          onClick={() => {
+            removeEnducement("dedicatedFans");
+            removeItemCost(10000);
+          }}
+        >
+          -
+        </button>
+        <button
+          disabled={state.teamEnducements.cheerleaders >= 12}
+          onClick={() => {
+            addEnducement("dedicatedFans");
+            addItemCost(10000);
+          }}
+        >
+          +
+        </button>
+        {state.teamEnducements.dedicatedFans}
       </div>
       <div>
         Cheerleaders
