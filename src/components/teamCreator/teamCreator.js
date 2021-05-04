@@ -37,6 +37,7 @@ export const useStore = create((set) => ({
       teamName: 0,
       rerrols: 0,
       teamEnducements: {
+        dedicatedFans: 0,
         assistantCoaches: 0,
         cheerleaders: 0,
         apothecary: 0,
@@ -387,7 +388,7 @@ function TeamCreator(props) {
         {state.teamEnducements.assistantCoaches}
       </div>
       <div>
-        Dedicated dedicated
+        Dedicated Fans
         <button
           disabled={state.teamEnducements.dedicatedFans <= 0}
           onClick={() => {
