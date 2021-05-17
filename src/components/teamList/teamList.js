@@ -31,6 +31,8 @@ function TeamList(props) {
     addPlayersQty,
     addItemCost,
     teamTemplate,
+    removeRerrol,
+    addRerrol,
   } = useStore((state) => state);
   const location = useLocation();
 
@@ -333,12 +335,34 @@ function TeamList(props) {
         </tbody>
       </table>
       <div>Total cost: {state.totalPrice}</div>
-      <div>Dedicated fans: {state.dedicatedFans}</div>
+      <div>Dedicated fans: {state.teamEnducements.dedicatedFans}</div>
       <div>Assistant coaches: {state.teamEnducements.assistantCoaches}</div>
       <div>Cheerleaders: {state.teamEnducements.cheerleaders}</div>
       <div>Apothecary: {state.teamEnducements.apothecary}</div>
       <div>Team Wizzard: {state.teamEnducements.teamWizzard}</div>
-      <div>Re-rolls:{rerrols}</div>
+      <div>
+        Re-rolls:{rerrols}
+        <button
+          disabled={state.rerrols < 1}
+          onClick={() => {
+            removeRerrol();
+            removeItemCost(teams[state.teamType].teamRerolls.price);
+            console.log(teams[state.teamType].teamRerolls.price);
+          }}
+        >
+          -
+        </button>
+        <button
+          disabled={state.rerrols >= 8}
+          onClick={() => {
+            addRerrol();
+            addItemCost(teams[state.teamType].teamRerolls.price);
+            console.log();
+          }}
+        >
+          +
+        </button>
+      </div>
       <button
         onClick={() => {
           const name = state.teamName;
