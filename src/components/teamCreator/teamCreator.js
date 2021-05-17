@@ -27,6 +27,7 @@ export const useStore = create((set) => ({
     dedicatedFans: 0,
   },
   totalPrice: 0,
+  treasury: 1000000,
   removeState: () =>
     set((state) => ({
       ...state,
@@ -45,6 +46,14 @@ export const useStore = create((set) => ({
       },
       totalPrice: 0,
     })),
+  addTreasury: (coins) => set((state) => ({
+    ...state,
+    treasury: state.treasury + coins
+  })),
+  removeTreasure: (coins) => set((state) => ({
+    ...state,
+    treasury: state.treasury - coins
+  })),
   addTeamTemplate: (team) =>
     set((state) => ({
       ...state,
@@ -284,6 +293,8 @@ function TeamCreator(props) {
     removeItemCost,
     addEnducement,
     removeEnducement,
+    addTreasury,
+    removeTreasure
   } = useStore((state) => state);
 
   const state = useStore();
@@ -314,17 +325,19 @@ function TeamCreator(props) {
               onClick={() => {
                 removePlayersQty(player.position);
                 removeItemCost(player.cost);
+                addTreasury(player.cost)
                 console.log(state.playersQty);
               }}
             >
               -
             </button>
             <button
-              disabled={state.playersQty[player.position] >= player.qty}
+              disabled={state.playersQty[player.position] >= player.qty || state.treasury < player.cost}
               onClick={() => {
                 addPlr(player);
                 addPlayersQty(player.position);
                 addItemCost(player.cost);
+                removeTreasure(player.cost)
               }}
             >
               +
@@ -348,15 +361,17 @@ function TeamCreator(props) {
           onClick={() => {
             removeRerrol();
             removeItemCost(teams[team].teamRerolls.price);
+            addTreasury(teams[team].teamRerolls.price)
             console.log(state.rerrols);
           }}
         >
           -
         </button>
         <button
-          disabled={state.rerrols >= 8}
+          disabled={state.rerrols >= 8 || state.treasury < teams[team].teamRerolls.price}
           onClick={() => {
             addRerrol();
+            removeTreasure(teams[team].teamRerolls.price)
             addItemCost(teams[team].teamRerolls.price);
             console.log(state.rerolls);
           }}
@@ -501,6 +516,7 @@ function TeamCreator(props) {
         </Link>
       </button>
       <div>Total price: {state.totalPrice}</div>
+      <div>Treasury: {state.treasury}</div>
       <button>
         <Link to="/teamchoise">Go back</Link>
       </button>

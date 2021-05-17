@@ -33,6 +33,8 @@ function TeamList(props) {
     teamTemplate,
     removeRerrol,
     addRerrol,
+    removeEnducement,
+    addEnducement
   } = useStore((state) => state);
   const location = useLocation();
 
@@ -335,11 +337,94 @@ function TeamList(props) {
         </tbody>
       </table>
       <div>Total cost: {state.totalPrice}</div>
-      <div>Dedicated fans: {state.teamEnducements.dedicatedFans}</div>
-      <div>Assistant coaches: {state.teamEnducements.assistantCoaches}</div>
-      <div>Cheerleaders: {state.teamEnducements.cheerleaders}</div>
-      <div>Apothecary: {state.teamEnducements.apothecary}</div>
-      <div>Team Wizzard: {state.teamEnducements.teamWizzard}</div>
+      <div>Dedicated fans: {state.teamEnducements.dedicatedFans}<button
+        disabled={state.teamEnducements.dedicatedFans <= 0}
+        onClick={() => {
+          removeEnducement("dedicatedFans");
+        }}
+      >
+        -
+        </button>
+        <button
+          disabled={state.teamEnducements.cheerleaders >= 12}
+          onClick={() => {
+            addEnducement("dedicatedFans");
+          }}
+        >
+          +
+        </button></div>
+      <div>Assistant coaches: {state.teamEnducements.assistantCoaches}<button
+        disabled={state.teamEnducements.assistantCoaches <= 0}
+        onClick={() => {
+          removeEnducement("assistantCoaches");
+          removeItemCost(10000);
+        }}
+      >
+        -
+        </button>
+        <button
+          disabled={state.teamEnducements.assistantCoaches >= 6}
+          onClick={() => {
+            addEnducement("assistantCoaches");
+            addItemCost(10000);
+          }}
+        >
+          +
+        </button></div>
+      <div>Cheerleaders: {state.teamEnducements.cheerleaders}<button
+        disabled={state.teamEnducements.cheerleaders <= 0}
+        onClick={() => {
+          removeEnducement("cheerleaders");
+          removeItemCost(10000);
+        }}
+      >
+        -
+        </button>
+        <button
+          disabled={state.teamEnducements.cheerleaders >= 12}
+          onClick={() => {
+            addEnducement("cheerleaders");
+            addItemCost(10000);
+          }}
+        >
+          +
+        </button></div>
+      <div>Apothecary: {state.teamEnducements.apothecary}<button
+        disabled={state.teamEnducements.apothecary <= 0}
+        onClick={() => {
+          removeEnducement("apothecary");
+          removeItemCost(50000);
+        }}
+      >
+        -
+        </button>
+        <button
+          disabled={state.teamEnducements.apothecary >= 1}
+          onClick={() => {
+            addEnducement("apothecary");
+            addItemCost(50000);
+          }}
+        >
+          +
+        </button></div>
+      <div>Team Wizzard: {state.teamEnducements.teamWizzard}<button
+        disabled={state.teamEnducements.teamWizzard <= 0}
+        onClick={() => {
+          removeEnducement("teamWizzard");
+          removeItemCost(150000);
+        }}
+      >
+        -
+        </button>
+        <button
+          disabled={state.teamEnducements.teamWizzard >= 1}
+          onClick={() => {
+            addEnducement("teamWizzard");
+            addItemCost(150000);
+          }}
+        >
+          +
+        </button></div>
       <div>
         Re-rolls:{rerrols}
         <button
