@@ -27,7 +27,7 @@ export const useStore = create((set) => ({
     dedicatedFans: 0,
   },
   totalPrice: 0,
-  treasury: 1000000,
+  treasury: 0,
   removeState: () =>
     set((state) => ({
       ...state,
@@ -46,6 +46,10 @@ export const useStore = create((set) => ({
       },
       totalPrice: 0,
     })),
+  setTreasury: (value) => set((state) => ({
+    ...state,
+    treasury: value
+  })),
   addTreasury: (coins) => set((state) => ({
     ...state,
     treasury: state.treasury + coins
@@ -294,7 +298,8 @@ function TeamCreator(props) {
     addEnducement,
     removeEnducement,
     addTreasury,
-    removeTreasure
+    removeTreasure,
+    setTreasury
   } = useStore((state) => state);
 
   const state = useStore();
@@ -313,6 +318,14 @@ function TeamCreator(props) {
         }}
         style={{ width: "200px" }}
       ></input>
+      <div>
+        <button>Add treasure: </button>
+        <input
+          onChange={(event) => {
+            setTreasury(event.target.value)
+          }}
+          style={{ width: "200px" }}></input>
+      </div>
       {teams[team].players.map((player) => {
         return (
           <div>
@@ -325,6 +338,7 @@ function TeamCreator(props) {
               onClick={() => {
                 removePlayersQty(player.position);
                 removeItemCost(player.cost);
+                removePlr(player)
                 addTreasury(player.cost)
                 console.log(state.playersQty);
               }}
@@ -490,7 +504,7 @@ function TeamCreator(props) {
         </button>
         {state.teamEnducements.teamWizzard}
       </div>
-      <button
+      {/* <button
         onClick={() => {
           setNewTeamData((state) => {
             return state.map((player, i) => {
@@ -501,8 +515,10 @@ function TeamCreator(props) {
         }}
       >
         Submit
-      </button>
-      <button>
+      </button> */}
+      <button onClick={() => {
+        window.sessionStorage.clear();
+      }}>
         <Link
           to={{
             pathname: "/teamlist/" + team,

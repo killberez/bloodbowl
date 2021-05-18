@@ -34,7 +34,8 @@ function TeamList(props) {
     removeRerrol,
     addRerrol,
     removeEnducement,
-    addEnducement
+    addEnducement,
+    addTreasury
   } = useStore((state) => state);
   const location = useLocation();
 
@@ -52,7 +53,7 @@ function TeamList(props) {
       window.sessionStorage.getItem("state")
     );
     console.log(state);
-    if (!state.rerrols && dataInSessionStorage) {
+    if (!state.teamName && dataInSessionStorage) {
       refreshState(dataInSessionStorage);
     }
   }, [state]);
@@ -336,10 +337,21 @@ function TeamList(props) {
           })}
         </tbody>
       </table>
+      <div>Add Treasury:
+        <input
+          onChange={(event) => {
+            addTreasury(event.target.value);
+            console.log(state.treasury);
+          }}
+          style={{ width: "200px" }}
+        ></input>
+      </div>
+      <div>Treasury: {state.treasury}</div>
       <div>Total cost: {state.totalPrice}</div>
       <div>Dedicated fans: {state.teamEnducements.dedicatedFans}<button
         disabled={state.teamEnducements.dedicatedFans <= 0}
         onClick={() => {
+          window.sessionStorage.clear();
           removeEnducement("dedicatedFans");
         }}
       >
@@ -348,6 +360,7 @@ function TeamList(props) {
         <button
           disabled={state.teamEnducements.cheerleaders >= 12}
           onClick={() => {
+            window.sessionStorage.clear();
             addEnducement("dedicatedFans");
           }}
         >
@@ -356,6 +369,7 @@ function TeamList(props) {
       <div>Assistant coaches: {state.teamEnducements.assistantCoaches}<button
         disabled={state.teamEnducements.assistantCoaches <= 0}
         onClick={() => {
+          window.sessionStorage.clear();
           removeEnducement("assistantCoaches");
           removeItemCost(10000);
         }}
@@ -365,6 +379,7 @@ function TeamList(props) {
         <button
           disabled={state.teamEnducements.assistantCoaches >= 6}
           onClick={() => {
+            window.sessionStorage.clear();
             addEnducement("assistantCoaches");
             addItemCost(10000);
           }}
@@ -374,6 +389,7 @@ function TeamList(props) {
       <div>Cheerleaders: {state.teamEnducements.cheerleaders}<button
         disabled={state.teamEnducements.cheerleaders <= 0}
         onClick={() => {
+          window.sessionStorage.clear();
           removeEnducement("cheerleaders");
           removeItemCost(10000);
         }}
@@ -383,6 +399,7 @@ function TeamList(props) {
         <button
           disabled={state.teamEnducements.cheerleaders >= 12}
           onClick={() => {
+            window.sessionStorage.clear();
             addEnducement("cheerleaders");
             addItemCost(10000);
           }}
@@ -392,6 +409,7 @@ function TeamList(props) {
       <div>Apothecary: {state.teamEnducements.apothecary}<button
         disabled={state.teamEnducements.apothecary <= 0}
         onClick={() => {
+          window.sessionStorage.clear();
           removeEnducement("apothecary");
           removeItemCost(50000);
         }}
@@ -401,6 +419,7 @@ function TeamList(props) {
         <button
           disabled={state.teamEnducements.apothecary >= 1}
           onClick={() => {
+            window.sessionStorage.clear();
             addEnducement("apothecary");
             addItemCost(50000);
           }}
@@ -410,6 +429,7 @@ function TeamList(props) {
       <div>Team Wizzard: {state.teamEnducements.teamWizzard}<button
         disabled={state.teamEnducements.teamWizzard <= 0}
         onClick={() => {
+          window.sessionStorage.clear();
           removeEnducement("teamWizzard");
           removeItemCost(150000);
         }}
@@ -419,6 +439,7 @@ function TeamList(props) {
         <button
           disabled={state.teamEnducements.teamWizzard >= 1}
           onClick={() => {
+            window.sessionStorage.clear();
             addEnducement("teamWizzard");
             addItemCost(150000);
           }}
@@ -427,7 +448,7 @@ function TeamList(props) {
         </button></div>
       <div>
         Re-rolls:{rerrols}
-        <button
+        {/* <button
           disabled={state.rerrols < 1}
           onClick={() => {
             removeRerrol();
@@ -436,10 +457,11 @@ function TeamList(props) {
           }}
         >
           -
-        </button>
+        </button> */}
         <button
           disabled={state.rerrols >= 8}
           onClick={() => {
+            window.sessionStorage.clear();
             addRerrol();
             addItemCost(teams[state.teamType].teamRerolls.price);
             console.log();
